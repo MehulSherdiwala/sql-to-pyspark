@@ -14,13 +14,16 @@
         .CodeMirror{
             height: 500px;
         }
+        .jumbotron{
+            padding-top: 25px;
+        }
     </style>
 </head>
 <body>
     <div class="container jumbotron">
         <h1 class="text-center">SQl to PySpark Converter</h1>
         <br><br>
-        <form action="#" method="post">
+        <form action="" method="post">
             <div class="form-group">
                 <label for="exampleInputEmail1">SQL Query</label>
                 <textarea name="sql" class="form-control" style="height: 80vh;">{% if formdata %}{{ formdata['sql'] }}{% endif %}</textarea>
