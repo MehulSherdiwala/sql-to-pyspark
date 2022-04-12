@@ -407,7 +407,7 @@ def fn_from(from_str):
             if from_str.find(".union") >= 0:
                 result_from = from_str
             else:
-                result_from = prefix +  from_str.title() + "\n"
+                result_from = prefix +  from_str.title() + "\\\n"
         elif type(from_str) is dict:
             key = next(iter(from_str))
             if "value" in from_str.keys():
@@ -416,11 +416,11 @@ def fn_from(from_str):
                 result_from += ".join("
                 result_from += fn_from(from_str[key])
                 result_from += ", " + fn_condition(from_str['on'])
-                result_from += joins[key] + ")\n"
+                result_from += joins[key] + ")\\\n"
             elif key == "cross join":
                 result_from += ".crossJoin("
                 result_from += fn_from(from_str[key])
-                result_from += ")\n"
+                result_from += ")\\\n"
             else:
                 result_from += format({"from": from_str})[5:]
 
@@ -574,19 +574,19 @@ def fn_genSQL(data):
         if v_fn_from:
             v_final_stmt += v_fn_from[:-1]
         if v_fn_where:
-            v_final_stmt += "\n.filter("+v_fn_where+")"
+            v_final_stmt += "\n.filter("+v_fn_where+")\\"
         if v_fn_groupby:
-            v_final_stmt += "\n.groupBy("+v_fn_groupby+")"
+            v_final_stmt += "\n.groupBy("+v_fn_groupby+")\\"
         if v_fn_agg:
-            v_final_stmt += "\n.agg("+v_fn_agg+")"
+            v_final_stmt += "\n.agg("+v_fn_agg+")\\"
         if v_fn_select:
             v_final_stmt += "\n.select("+v_fn_select+")"
             if (type(data['select']) is dict) and ('distinct' in data['select']['value'].keys()):
                 v_final_stmt += ".distinct()"
         if v_fn_orderby:
-            v_final_stmt += "\n.orderBy("+v_fn_orderby+")"
+            v_final_stmt += "\\\n.orderBy("+v_fn_orderby+")"
         if v_fn_having:
-            v_final_stmt += "\n.filter("+v_fn_having+")"
+            v_final_stmt += "\\\n.filter("+v_fn_having+")"
 
         v_final_stmt = v_final_stmt.replace("_ID", "_SK")
         return v_final_stmt
@@ -604,7 +604,7 @@ def fn_get_pyspark(data):
             for q in data[k]:
                 tableName = prefix + (q['from'][0]['value'].title() if type(q['from']) is list else q['from'].title() if type(q['from']) is str else q['from']['value'].title())
                 if flag:
-                    tables = tableName + "\n"
+                    tables = tableName + "\\\n"
                 else:
                     tables += ".union(" + tableName + ")\n"
                 
@@ -625,7 +625,7 @@ def fn_get_pyspark(data):
             for q in data['from']['value'][k]:
                 tableName = prefix + (q['from'][0]['value'].title() if type(q['from']) is list else q['from'].title() if type(q['from']) is str else q['from']['value'].title())
                 if flag:
-                    tables = tableName + "\n"
+                    tables = tableName + "\\\n"
                 else:
                     tables += ".union(" + tableName + ")\n"
                 
